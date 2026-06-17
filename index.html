@@ -750,3 +750,66 @@ document.addEventListener("DOMContentLoaded", async () => {
             cursor.style.left = `${e.clientX - 10}px`;
             cursor.style.top = `${e.clientY - 10}px`;
             document.body
+<script>
+// === HỆ THỐNG KEY (GIỐNG APP ĐỘ NHẠY) ===
+const KEYS = {
+  day:      ['KEY1', 'KEY2', 'KEY3'],
+  threeday: ['VIP1', 'VIP2'],
+  vip3day:  ['VIP3DAY-ESPORT'],
+  vv:       ['CRIPERLEGEND-SETUP']
+};
+
+function checkKey(input) {
+  for (let tier in KEYS) {
+    if (KEYS[tier].includes(input.trim())) {
+      return tier;
+    }
+  }
+  return null;
+}
+
+// === LƯU KEY VÀO LOCALSTORAGE ===
+function saveKey(key, tier) {
+  localStorage.setItem('user_key', key);
+  localStorage.setItem('user_tier', tier);
+}
+
+function getSavedKey() {
+  return localStorage.getItem('user_key') || '';
+}
+
+function getSavedTier() {
+  return localStorage.getItem('user_tier') || 'day';
+}
+
+// === XỬ LÝ LOGIN ===
+function handleLogin() {
+  const input = document.getElementById('keyInput');
+  const key = input.value.trim();
+  
+  if (!key) {
+    alert('Vui lòng nhập key!');
+    return;
+  }
+  
+  const tier = checkKey(key);
+  if (tier) {
+    saveKey(key, tier);
+    alert('✅ Đăng nhập thành công! Tier: ' + tier);
+    // Chuyển sang màn hình chính
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainScreen').style.display = 'block';
+  } else {
+    alert('❌ Key không hợp lệ!');
+  }
+}
+
+// === TỰ ĐỘNG LOGIN NẾU CÓ KEY LƯU SẴN ===
+window.onload = function() {
+  const saved = getSavedKey();
+  if (saved && checkKey(saved)) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('mainScreen').style.display = 'block';
+  }
+};
+</script>
